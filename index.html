@@ -55,12 +55,12 @@
             font-size: x-large;
         }
 
-        #botao1 {
+        #botao1, #botao5,#botao6 {
             background-color: #3498db; /* Cor 1 */
             color: #ffffff;
         }
 
-        #botao1:active {
+        #botao1:active, #botao5:active,#botao6:active {
             background-color: #2980b9;
             transform: translateY(2px);
             box-shadow: none;
@@ -88,13 +88,13 @@
             box-shadow: none;
         }
 
-        #botao4 {
-            background-color: #d35400;
+        #botao4,#botao7,#botao8,#botaoSpeed {
+            background-color: #f39c12; 
             color: #ffffff;
         }
 
-        #botao4:active {
-            background-color: #f39c12;
+        #botao4:active,#botao7:active,#botao8:active,#botaoSpeed:active {
+            background-color: #d35400;
             transform: translateY(2px);
             box-shadow: none;
         }
@@ -107,9 +107,9 @@
 <body unselectable="on" class="prevent-select">
     <table class="joystick-table">
         <tr>
-            <td class="joystick-cell"><button class="prevent-select joystick-button" id="botao1">↖</button></td>
+            <td class="joystick-cell"><button class="prevent-select joystick-button" id="botao5">↖</button></td>
             <td class="joystick-cell"><button class="prevent-select joystick-button" id="botao1">↑</button></td>
-            <td class="joystick-cell"><button class="prevent-select joystick-button" id="botao1">↗</button></td>
+            <td class="joystick-cell"><button class="prevent-select joystick-button" id="botao6">↗</button></td>
         </tr>
         <tr>
             <td class="joystick-cell"><button class="prevent-select joystick-button" id="botao2">←</button></td>
@@ -117,25 +117,35 @@
             <td class="joystick-cell"><button class="prevent-select joystick-button" id="botao3">→</button></td>
         </tr>
         <tr>
-            <td class="joystick-cell"><button class="prevent-select joystick-button" id="botao4">↙</button></td>
+            <td class="joystick-cell"><button class="prevent-select joystick-button" id="botao7">↙</button></td>
             <td class="joystick-cell"><button class="prevent-select joystick-button" id="botao4">↓</button></td>
-            <td class="joystick-cell"><button class="prevent-select joystick-button" id="botao4">↘</button></td>
+            <td class="joystick-cell"><button class="prevent-select joystick-button" id="botao8">↘</button></td>
         </tr>
         <tr>
-            <td class="joystick-cell"><button class="prevent-select joystick-button-speed" id="botao4">velocidade</button></td>
+            <td class="joystick-cell"><button onclick="changeSpeed()" class="prevent-select joystick-button-speed" id="botaoSpeed">velocidade</button></td>
             <td></td>
-            <td class="joystick-cell"><h1 class="prevent-select button-speed">max.</h1></td>
+            <td class="joystick-cell"><h1 class="prevent-select button-speed" id="speed">Med.</h1></td>
         </tr>
     </table>
 
     <script>
+        var vMax = false;
+        var vMed = true;
+        var vMin = false;
+
         const botao1 = document.getElementById('botao1');
         const botao2 = document.getElementById('botao2');
         const botao3 = document.getElementById('botao3');
         const botao4 = document.getElementById('botao4');
 
+        const botao5  = document.getElementById('botao5');
+        const botao6 = document.getElementById('botao6');
+        const botao7  = document.getElementById('botao7');
+        const botao8  = document.getElementById('botao8');
+
         let intervalID = null;
 
+        /*************************        frente     *****************************************/
         botao1.addEventListener('touchstart', () => {
             botao1.style.backgroundColor = '#2980b9';
             botao1.style.transform = 'translateY(2px)';
@@ -152,7 +162,41 @@
             clearInterval(intervalID);
             fetch('/pressionado', { method: 'POST', body: '0' });
         });
+        /*************************frente 135 graus*****************************************/
+        botao5.addEventListener('touchstart', () =>{
+            botao5.style.backgroundColor = '#2980b9';
+            botao5.style.transform = 'translateY(2px)';
+            botao5.style.boxShadow = 'none';
+            intervalID = setInterval(() => {
+                fetch('/pressionado', { method: 'POST', body: '5' });
+            }, 100);
+        });
 
+        botao5.addEventListener('touchend', () => {
+            botao5.style.backgroundColor = '#3498db';
+            botao5.style.transform = 'translateY(0)';
+            botao5.style.boxShadow = 'none';
+            clearInterval(intervalID);
+            fetch('/pressionado', { method: 'POST', body: '0' });
+        });
+        /*************************frente 45 graus*****************************************/
+        botao6.addEventListener('touchstart', () => {
+            botao6.style.backgroundColor = '#2980b9';
+            botao6.style.transform = 'translateY(2px)';
+            botao6.style.boxShadow = 'none';
+            intervalID = setInterval(() => {
+                fetch('/pressionado', { method: 'POST', body: '6' });
+            }, 100);
+        });
+
+        botao6.addEventListener('touchend', () => {
+            botao6.style.backgroundColor = '#3498db';
+            botao6.style.transform = 'translateY(0)';
+            botao6.style.boxShadow = 'none';
+            clearInterval(intervalID);
+            fetch('/pressionado', { method: 'POST', body: '0' });
+        });
+        /**************************esqueda************************************************/
         botao2.addEventListener('touchstart', () => {
             botao2.style.backgroundColor = '#ff8c66';
             botao2.style.transform = 'translateY(2px)';
@@ -169,7 +213,7 @@
             clearInterval(intervalID);
             fetch('/pressionado', { method: 'POST', body: '0' });
         });
-
+        /*************************   direita    *****************************************/
         botao3.addEventListener('touchstart', () => {
             botao3.style.backgroundColor = '#1d8348';
             botao3.style.transform = 'translateY(2px)';
@@ -186,7 +230,7 @@
             clearInterval(intervalID);
             fetch('/pressionado', { method: 'POST', body: '0' });
         });
-
+        /*************************      re      *****************************************/
         botao4.addEventListener('touchstart', () => {
             botao4.style.backgroundColor = '#d35400';
             botao4.style.transform = 'translateY(2px)';
@@ -203,6 +247,56 @@
             clearInterval(intervalID);
             fetch('/pressionado', { method: 'POST', body: '0' });
         });
+        /*************************  re 225 graus*****************************************/
+        botao7.addEventListener('touchstart', () => {
+            botao7.style.backgroundColor = '#d35400';
+            botao7.style.transform = 'translateY(2px)';
+            botao7.style.boxShadow = 'none';
+            intervalID = setInterval(() => {
+                fetch('/pressionado', { method: 'POST', body: '7' });
+            }, 100);
+        });
+
+        botao7.addEventListener('touchend', () => {
+            botao7.style.backgroundColor = '#f39c12';
+            botao7.style.transform = 'translateY(0)';
+            botao7.style.boxShadow = 'none';
+            clearInterval(intervalID);
+            fetch('/pressionado', { method: 'POST', body: '0' });
+        });
+        /*************************  re 315 graus*****************************************/
+        botao8.addEventListener('touchstart', () => {
+            botao8.style.backgroundColor = '#d35400';
+            botao8.style.transform = 'translateY(2px)';
+            botao8.style.boxShadow = 'none';
+            intervalID = setInterval(() => {
+                fetch('/pressionado', { method: 'POST', body: '8' });
+            }, 100);
+        });
+
+        botao8.addEventListener('touchend', () => {
+            botao8.style.backgroundColor = '#f39c12';
+            botao8.style.transform = 'translateY(0)';
+            botao8.style.boxShadow = 'none';
+            clearInterval(intervalID);
+            fetch('/pressionado', { method: 'POST', body: '0' });
+        });
+        /*************************** VELOCIDADE *******************/
+        function changeSpeed(){
+            fetch('/pressionado', { method: 'POST', body: '9' });
+            if(vMed){
+                document.getElementById("speed").innerHTML = "Max.";
+                return vMax = true, vMed = false, vMin = false;
+            }
+            if(vMax){
+                document.getElementById("speed").innerHTML = "Min.";
+                return vMax = false, vMed = false, vMin = true;
+            }
+            if(vMin){
+                document.getElementById("speed").innerHTML = "Med.";
+                return vMax = false, vMed = true, vMin = false;
+            }            
+        }
     </script>
 </body>
 </html>
