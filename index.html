@@ -39,6 +39,20 @@
             transition: background-color 0.3s, transform 0.3s, box-shadow 0.3s;
             display: inline-block;
         }
+        .joystick-button-speed{
+            width: 27vw;
+            height: 18vw;
+            border: 6px solid;
+            border-radius: 28px;
+            font-weight: 800;
+            padding: 1px;
+        }
+        .button-speed{
+            text-align: center;
+            height: 11vw;
+            border: 2px solid;
+            border-radius: 12px;
+        }
 
         #botao1 {
             background-color: #3498db; /* Cor 1 */
@@ -105,6 +119,11 @@
             <td class="joystick-cell"><button class="prevent-select joystick-button" id="botao4">↙</button></td>
             <td class="joystick-cell"><button class="prevent-select joystick-button" id="botao4">↓</button></td>
             <td class="joystick-cell"><button class="prevent-select joystick-button" id="botao4">↘</button></td>
+        </tr>
+        <tr>
+            <td class="joystick-cell"><button class="prevent-select joystick-button-speed" id="botao4">velocidade</button></td>
+            <td></td>
+            <td class="joystick-cell"><h1 class="prevent-select button-speed">max.</h1></td>
         </tr>
     </table>
 
