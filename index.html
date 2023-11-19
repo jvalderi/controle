@@ -1,194 +1,191 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <!-- Defina a metatag viewport para impedir o zoom -->
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <style>
+        body {
+            text-align: center;
+        }
+
+        .prevent-select {
+            -webkit-user-select: none; /* Safari */
+            -ms-user-select: none; /* IE 10 and IE 11 */
+            user-select: none; /* Standard syntax */
+        }        
+
+        .joystick-table {
+            width: 100%;
+            height: 100%;
+            border-collapse: collapse;
+            table-layout: fixed;
+            margin: 0 auto;
+        }
+
+        .joystick-cell {
+            width: 33.33%;
+            text-align: center;
+            vertical-align: middle;
+        }
+
+        .joystick-button {
+            width: 100px; /* Largura dos botões */
+            height: 100px; /* Altura dos botões */
+            border: 6px solid;
+            border-radius: 50%;
+            font-size: xx-large;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.3s, box-shadow 0.3s;
+            display: inline-block;
+        }
+
+        #botao1 {
+            background-color: #3498db; /* Cor 1 */
+            color: #ffffff;
+        }
+
+        #botao1:active {
+            background-color: #2980b9;
+            transform: translateY(2px);
+            box-shadow: none;
+        }
+
+        #botao2 {
+            background-color: #ff8c66;
+            color: #ffffff;
+        }
+
+        #botao2:active {
+            background-color: #ff5733;
+            transform: translateY(2px);
+            box-shadow: none;
+        }
+
+        #botao3 {
+            background-color: #1d8348;
+            color: #ffffff;
+        }
+
+        #botao3:active {
+            background-color: #27ae60;
+            transform: translateY(2px);
+            box-shadow: none;
+        }
+
+        #botao4 {
+            background-color: #d35400;
+            color: #ffffff;
+        }
+
+        #botao4:active {
+            background-color: #f39c12;
+            transform: translateY(2px);
+            box-shadow: none;
+        }
+
+        #emoji-robô {
+            font-size: 100px; /* Tamanho do emoji do robô */
+        }
+    </style>
 </head>
-<script>
-    var x,xOrigem, canvas, ctx;
-    window.addEventListener('load', () => {
-        canvas = document.getElementById('molde');
-        ctx = canvas.getContext('2d');
-        resize();
-        document.addEventListener('mousedown', desenhar);
-        document.addEventListener('mousemove', desenhando);
-        document.addEventListener('mouseup', pararDesenhar);
+<body unselectable="on" class="prevent-select">
+    <h2 class="prevent-select">&#129302; ROBÓTICA PARANÁ &#129302;</h2>
+    <h2 class="prevent-select">&#x1F3AE; Aula 39 - Robô Wireless &#128246;</h2>
 
-        document.addEventListener('touchstart', desenhar);
-        document.addEventListener('touchend', pararDesenhar);
-        document.addEventListener('touchcancel', pararDesenhar);
-        document.addEventListener('touchmove', desenhando);
+    <table class="joystick-table">
+        <tr>
+            <td class="joystick-cell"><button class="prevent-select joystick-button" id="botao1">↖</button></td>
+            <td class="joystick-cell"><button class="prevent-select joystick-button" id="botao1">↑</button></td>
+            <td class="joystick-cell"><button class="prevent-select joystick-button" id="botao1">↗</button></td>
+        </tr>
+        <tr>
+            <td class="joystick-cell"><button class="prevent-select joystick-button" id="botao2">←</button></td>
+            <td class="joystick-cell"><div id="emoji-robô" class="prevent-select">🎮</div></td>
+            <td class="joystick-cell"><button class="prevent-select joystick-button" id="botao3">→</button></td>
+        </tr>
+        <tr>
+            <td class="joystick-cell"><button class="prevent-select joystick-button" id="botao4">↙</button></td>
+            <td class="joystick-cell"><button class="prevent-select joystick-button" id="botao4">↓</button></td>
+            <td class="joystick-cell"><button class="prevent-select joystick-button" id="botao4">↘</button></td>
+        </tr>
+    </table>
 
-    });
-    function resize(){
-        xOrigem = canvas.width/2;
-        joyStick(xOrigem);
-    }
-    function joyStick(x){
-        ctx.beginPath();
-        ctx.arc(x, 25, 25, 0, 2*Math.PI);
-        ctx.fillStyle = 'red';
-        ctx.fill();
-        console.log(x);
-        fetch('/pressionado', { method: 'POST', body: x });
-        }
+    <script>
+        const botao1 = document.getElementById('botao1');
+        const botao2 = document.getElementById('botao2');
+        const botao3 = document.getElementById('botao3');
+        const botao4 = document.getElementById('botao4');
 
-    let xCoord = 0, yCoord = 0;
-    function pegarPosicao(event){
-        let mouseX = event.clientX || event.touches[0].clientX;
-        let mouseY = event.clientY || event.touches[0].clientY;
-        xCoord = mouseX - canvas.offsetLeft;
-        yCoord = mouseY - canvas.offsetTop;
-    }
-    function dentro() {
-        var dentroDoRaio = Math.sqrt(Math.pow(xCoord - xOrigem +1, 2) + Math.pow(yCoord - 25,2));
-        if(115 >= dentroDoRaio){
-            return true;
-        }else {return false}
-    }
-    var paint = false;
-    function desenhar(){
-        paint = true;
-        pegarPosicao(event);
-        if(dentro()){
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            joyStick(xCoord)
-        }
-    }
-    function pararDesenhar(){
-        paint = false;
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        joyStick(xOrigem);
-    }
-    function desenhando(){
-        pegarPosicao(event);
-        if (paint) {
-            if(dentro()){
-                ctx.clearRect(0, 0, canvas.width, canvas.height);
-                joyStick(xCoord)
-            }
-        }
-    }
-    function ligarSensor(){
-        let sensor = document.getElementById('sensor');
-        if(sensor.innerHTML == "desligado"){
-            sensor.innerHTML = "ligar";
-            sensor.style.backgroundColor = "green";
-            document.getElementById('sensorConsole').innerHTML = "ligado";
-            fetch('/pressionado', { method: 'POST', body: 'ligarSensor' });
-        }else{
-            sensor.innerHTML = "desligado";
-            sensor.style.backgroundColor = "red"
-            document.getElementById('sensorConsole').innerHTML = "desligado"
-            fetch('/pressionado', { method: 'POST', body: 'desligarSensor' });
-        }
-    }
-    var movendo = false;
-    function movimento() {   
-        if(movendo == true){
-            return true;
-        }
-        else{
-            return false;
-        }
-    }
-    function moverCarroFrente(){
-        if(movimento()){
-            console.log("parar")
-            movendo = false;
-            fetch('/pressionado', { method: 'POST', body: 'parar' });
-        }else{
-        console.log('FRENTE')
-        fetch('/pressionado', { method: 'POST', body: 'acelerar' });
-        movendo = true
-        }
-    }
-    function moverCarroRe(){
-        if(movimento()){
-            console.log("PARAR")
-            movendo = false;
-            fetch('/pressionado', { method: 'POST', body: 'parar' });
-        }
-        else{
-        console.log("RÉ")
-        fetch('/pressionado', { method: 'POST', body: 're' });
-        movendo = true;
-        }
-    }
-</script>
- <style>
-    body{
-        display: grid;
-        grid-template-columns: auto auto auto auto auto;
-        grid-template-rows: auto auto auto auto auto;
-        background-color: #E4E4E4;
-        margin: 0;
-        width: 100vw;
-        height: 100vh;
-    }
-    #molde{
-        background-color: aliceblue;
-        border: 1px black solid;
-        border-radius: 100px;
-        box-shadow: 0px 1px 5px black;
-    }
-    .pedal{
-        border: 1px black solid;
-        border-radius: 1px;
-        margin-left: 5px;
-    }
+        let intervalID = null;
 
-    #caixa_molde{
-        grid-area: 5;
-    }
+        botao1.addEventListener('touchstart', () => {
+            botao1.style.backgroundColor = '#2980b9';
+            botao1.style.transform = 'translateY(2px)';
+            botao1.style.boxShadow = 'none';
+            intervalID = setInterval(() => {
+                fetch('/pressionado', { method: 'POST', body: '1' });
+            }, 100);
+        });
 
-    p {
-        margin: 0;
-        text-align: center;
-    }
-    #console{
-        width: 25vw;
-        height: 15vh;
-        background-color: aliceblue;
-        box-shadow: 0 1px 1px black;
-    }
+        botao1.addEventListener('touchend', () => {
+            botao1.style.backgroundColor = '#3498db';
+            botao1.style.transform = 'translateY(0)';
+            botao1.style.boxShadow = 'none';
+            clearInterval(intervalID);
+            fetch('/pressionado', { method: 'POST', body: '0' });
+        });
 
-    #sensor{
-        grid-area: 2;
-        width: 13vw;
-        height: 9vh;
-        background-color: red;
-        border-radius: 12px;
-        color: white;
-    }
+        botao2.addEventListener('touchstart', () => {
+            botao2.style.backgroundColor = '#ff8c66';
+            botao2.style.transform = 'translateY(2px)';
+            botao2.style.boxShadow = 'none';
+            intervalID = setInterval(() => {
+                fetch('/pressionado', { method: 'POST', body: '2' });
+            }, 100);
+        });
 
-    #caixa_pedal{
-        grid-area: 5/5;
-    }
-    #caixa_marcha{
-        justify-self: center;
-        grid-area: 2/5;
-    }
+        botao2.addEventListener('touchend', () => {
+            botao2.style.backgroundColor = '#ff5733';
+            botao2.style.transform = 'translateY(0)';
+            botao2.style.boxShadow = 'none';
+            clearInterval(intervalID);
+            fetch('/pressionado', { method: 'POST', body: '0' });
+        });
 
-    #marcha{
-        border: 1px black solid;
-        width: 6vw;
-        height: 22vh;
-    }
- </style>
-<body>
-        <div id="console">
-            <p>sensor: <span id="sensorConsole">desligado</span></p>
-        </div>
-            <button onclick="ligarSensor()" id="sensor">desligado</button>
-        <div id="caixa_molde">
-            <canvas id="molde" width="300vw" height="50vh"></canvas>
-        </div>
-        <div id="caixa_pedal">
-            <button onclick="moverCarroRe()" class="pedal" id="pedalRe" style="width: 12vw;height: 16vh;"></button>
-            <button onclick="moverCarroFrente()" class="pedal" id="pedalAcelerador" style="width: 10vw;height: 30vh;"></button>
+        botao3.addEventListener('touchstart', () => {
+            botao3.style.backgroundColor = '#1d8348';
+            botao3.style.transform = 'translateY(2px)';
+            botao3.style.boxShadow = 'none';
+            intervalID = setInterval(() => {
+                fetch('/pressionado', { method: 'POST', body: '3' });
+            }, 100);
+        });
 
-        </div>
+        botao3.addEventListener('touchend', () => {
+            botao3.style.backgroundColor = '#27ae60';
+            botao3.style.transform = 'translateY(0)';
+            botao3.style.boxShadow = 'none';
+            clearInterval(intervalID);
+            fetch('/pressionado', { method: 'POST', body: '0' });
+        });
+
+        botao4.addEventListener('touchstart', () => {
+            botao4.style.backgroundColor = '#d35400';
+            botao4.style.transform = 'translateY(2px)';
+            botao4.style.boxShadow = 'none';
+            intervalID = setInterval(() => {
+                fetch('/pressionado', { method: 'POST', body: '4' });
+            }, 100);
+        });
+
+        botao4.addEventListener('touchend', () => {
+            botao4.style.backgroundColor = '#f39c12';
+            botao4.style.transform = 'translateY(0)';
+            botao4.style.boxShadow = 'none';
+            clearInterval(intervalID);
+            fetch('/pressionado', { method: 'POST', body: '0' });
+        });
+    </script>
 </body>
 </html>
